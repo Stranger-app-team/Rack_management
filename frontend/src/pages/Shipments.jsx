@@ -38,21 +38,61 @@ export default function Shipments() {
   // Extract material id helper
   const extractMaterialId = (val) => {
     if (!val) return ''
-    return val.includes(' - ') ? val.split(' - ')[0] : val.includes(' (') ? val.split(' (')[0] : val
+    return (val.includes(' - ') ? val.split(' - ')[0] : val.includes(' (') ? val.split(' (')[0] : val).trim()
   }
+
+  // Find assigned or stock location for a given material
+  const findLocationForMat = React.useCallback((matId, currentType = type) => {
+    if (!matId) return ''
+    const cleanId = matId.toLowerCase()
+
+    // 1. Check primary location assigned in Location Master
+    const assignedLoc = locations.find(l => {
+      const rawId = l.materialId || ''
+      const lMatId = (rawId.includes(' - ') ? rawId.split(' - ')[0] : rawId.includes(' (') ? rawId.split(' (')[0] : rawId).trim()
+      return lMatId.toLowerCase() === cleanId
+    })
+
+    if (currentType === 'OUT') {
+      // For OUTBOUND: prefer primary location if it has stock, otherwise any location with stock
+      if (assignedLoc) {
+        const primaryStock = inventory.find(i => i.locationId === assignedLoc.locationId && (i.materialId || '').toLowerCase() === cleanId && i.currentStock > 0)
+        if (primaryStock) return primaryStock.locationId
+      }
+      const stockLoc = inventory.find(i => (i.materialId || '').toLowerCase() === cleanId && i.currentStock > 0)
+      if (stockLoc) return stockLoc.locationId
+      return assignedLoc?.locationId || ''
+    }
+
+    // For INBOUND: return primary assigned location first, else any inventory location
+    if (assignedLoc?.locationId) return assignedLoc.locationId
+    const anyInvLoc = inventory.find(i => (i.materialId || '').toLowerCase() === cleanId)
+    return anyInvLoc?.locationId || ''
+  }, [locations, inventory, type])
 
   const addItem = () => setItems([...items, { id: Date.now(), materialId: '', locationId: '', quantity: '' }])
 
   const updateItem = (id, field, value) => {
     setItems(items.map(item => {
       if (item.id === id) {
-        // If material changes on OUT, clear location
-        if (field === 'materialId' && type === 'OUT') {
-          return { ...item, [field]: value, locationId: '' }
+        if (field === 'materialId') {
+          const matId = extractMaterialId(value)
+          const autoLoc = findLocationForMat(matId, type)
+          return { ...item, materialId: value, locationId: autoLoc || '' }
         }
         return { ...item, [field]: value }
       }
       return item
+    }))
+  }
+
+  const handleTypeChange = (newType) => {
+    setType(newType)
+    setItems(prevItems => prevItems.map(item => {
+      if (!item.materialId) return item
+      const matId = extractMaterialId(item.materialId)
+      const autoLoc = findLocationForMat(matId, newType)
+      return { ...item, locationId: autoLoc || '' }
     }))
   }
 
@@ -118,14 +158,14 @@ export default function Shipments() {
                 <div className="flex bg-secondary/50 rounded-lg p-1 border border-border">
                   <button
                     type="button"
-                    onClick={() => setType('IN')}
+                    onClick={() => handleTypeChange('IN')}
                     className={`flex-1 text-sm py-1.5 rounded-md font-medium transition-colors ${type === 'IN' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Receive (IN)
                   </button>
                   <button
                     type="button"
-                    onClick={() => setType('OUT')}
+                    onClick={() => handleTypeChange('OUT')}
                     className={`flex-1 text-sm py-1.5 rounded-md font-medium transition-colors ${type === 'OUT' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Dispatch (OUT)
@@ -182,8 +222,10 @@ export default function Shipments() {
                         rowLocationOptions = [] // must select material first
                       } else if (type === 'IN' && selectedMatId) {
                         rowLocationOptions = locations.map(l => {
-                          const isAssigned = l.materialId === selectedMatId
-                          const invItem = inventory.find(i => i.locationId === l.locationId && i.materialId === selectedMatId)
+                          const rawId = l.materialId || ''
+                          const lMatId = (rawId.includes(' - ') ? rawId.split(' - ')[0] : rawId.includes(' (') ? rawId.split(' (')[0] : rawId).trim()
+                          const isAssigned = lMatId.toLowerCase() === selectedMatId.toLowerCase()
+                          const invItem = inventory.find(i => i.locationId === l.locationId && (i.materialId || '').toLowerCase() === selectedMatId.toLowerCase())
                           const stock = invItem ? invItem.currentStock : 0
                           const isPrimary = isAssigned || stock > 0
                           

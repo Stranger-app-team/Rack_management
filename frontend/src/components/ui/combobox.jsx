@@ -1,6 +1,7 @@
 import * as React from "react"
 import { createPortal } from "react-dom"
 import { ChevronDown, Check } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function Combobox({ value, onChange, options, placeholder = "Select or type...", className = "" }) {
   const [open, setOpen] = React.useState(false)
@@ -35,7 +36,7 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
   const filtered = options.filter(o => {
     const text = typeof o === 'string' ? o : (o.label || o.value || "")
     const searchStr = typeof o === 'string' ? o : `${o.label} ${o.value} ${o.sub || ''}`
-    if (query === text) return true // Show all options if user hasn't started typing a new search
+    if (query === text) return true // Show all options if query exactly matches selected label
     return searchStr.toLowerCase().includes(query.toLowerCase())
   })
   
@@ -53,6 +54,15 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
     setOpen(false)
   }
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && open && filtered.length > 0) {
+      e.preventDefault()
+      handleSelect(filtered[0])
+    } else if (e.key === "Escape") {
+      setOpen(false)
+    }
+  }
+
   // Update portal position on scroll/resize and open
   React.useEffect(() => {
     if (!open || !wrapperRef.current) return
@@ -60,13 +70,12 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
       const rect = wrapperRef.current.getBoundingClientRect()
       const spaceBelow = window.innerHeight - rect.bottom
       const spaceAbove = rect.top
-      const height = Math.min(240, filtered.length * 36 + 8) // max-h-60 approx 240px
+      const height = Math.min(260, Math.max(60, filtered.length * 48 + 12))
 
-      // if not enough space below, and more space above, open upwards
       if (spaceBelow < height && spaceAbove > spaceBelow) {
         setDropdownStyle({
           position: 'fixed',
-          top: rect.top - height - 4,
+          top: Math.max(8, rect.top - height - 4),
           left: rect.left,
           width: rect.width,
         })
@@ -80,7 +89,7 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
       }
     }
     updatePosition()
-    window.addEventListener('scroll', updatePosition, true) // true to catch modal scroll
+    window.addEventListener('scroll', updatePosition, true)
     window.addEventListener('resize', updatePosition)
     return () => {
       window.removeEventListener('scroll', updatePosition, true)
@@ -89,42 +98,69 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
   }, [open, filtered.length])
 
   return (
-    <div ref={wrapperRef} className={`relative ${className}`}>
-      <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+    <div ref={wrapperRef} className="relative w-full">
+      <div className={cn(
+        "flex h-9 w-full items-center justify-between rounded-lg border border-input/80 bg-background px-3 py-1.5 text-xs transition-colors hover:border-input focus-within:border-primary/80 focus-within:ring-2 focus-within:ring-primary/20",
+        className
+      )}>
         <input
           type="text"
           value={query}
           onChange={handleChange}
           onFocus={() => setOpen(true)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full bg-transparent outline-none placeholder:text-muted-foreground"
+          className="w-full bg-transparent outline-none placeholder:text-muted-foreground text-foreground text-xs"
         />
-        <ChevronDown className="h-4 w-4 opacity-50 ml-2 cursor-pointer shrink-0" onClick={() => setOpen(!open)} />
+        <ChevronDown 
+          className={cn("h-4 w-4 opacity-50 ml-2 cursor-pointer shrink-0 transition-transform duration-200", open && "rotate-180 opacity-90 text-primary")} 
+          onClick={() => setOpen(!open)} 
+        />
       </div>
       {open && createPortal(
-        <ul ref={dropdownRef} style={dropdownStyle} className="z-[9999] max-h-60 overflow-auto rounded-md border bg-popover text-popover-foreground shadow-md p-1 outline-none animate-in fade-in-0 zoom-in-95">
+        <ul 
+          ref={dropdownRef} 
+          style={dropdownStyle} 
+          className="z-[9999] max-h-64 overflow-y-auto rounded-xl border border-border/80 bg-popover text-popover-foreground shadow-2xl p-1.5 outline-none animate-in fade-in-0 zoom-in-95 backdrop-blur-md space-y-1"
+        >
           {filtered.length === 0 ? (
-            <li className="px-2 py-1.5 text-sm text-muted-foreground text-center">No matches found.</li>
+            <li className="px-3 py-4 text-xs text-muted-foreground text-center">
+              No matching materials found.
+            </li>
           ) : (
             filtered.map((opt, i) => {
               const val = typeof opt === 'string' ? opt : opt.value
               const label = typeof opt === 'object' && opt.label ? opt.label : val
               const sub = typeof opt === 'object' ? opt.sub : null
+              const isSelected = value === val
+
               return (
                 <li
-                  key={i}
+                  key={val || i}
                   onMouseDown={(e) => { e.preventDefault(); handleSelect(opt) }}
-                  className={`relative flex flex-col w-full cursor-pointer select-none rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none hover:bg-accent hover:text-accent-foreground ${value === val ? "bg-accent text-accent-foreground" : ""}`}
+                  className={cn(
+                    "relative flex flex-col w-full cursor-pointer select-none rounded-lg py-2 px-2.5 text-xs outline-none transition-colors hover:bg-accent/80 hover:text-accent-foreground",
+                    isSelected ? "bg-primary/15 text-primary font-medium border border-primary/20" : "text-foreground"
+                  )}
                 >
-                  <div className="flex items-center w-full">
-                    <span className="truncate font-medium">{label}</span>
-                    {value === val && (
-                      <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
-                        <Check className="h-4 w-4 text-primary" />
-                      </span>
+                  <div className="flex items-center justify-between w-full gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      {val && (
+                        <span className="font-mono text-[10px] font-bold text-primary px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20 shrink-0">
+                          {val}
+                        </span>
+                      )}
+                      <span className="truncate font-medium">{label}</span>
+                    </div>
+                    {isSelected && (
+                      <Check className="h-3.5 w-3.5 text-primary shrink-0 ml-1" />
                     )}
                   </div>
-                  {sub && <span className="text-[10px] text-muted-foreground truncate opacity-80">{sub}</span>}
+                  {sub && (
+                    <span className="text-[10px] text-muted-foreground truncate mt-0.5 pl-0.5">
+                      {sub}
+                    </span>
+                  )}
                 </li>
               )
             })
@@ -135,3 +171,4 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
     </div>
   )
 }
+

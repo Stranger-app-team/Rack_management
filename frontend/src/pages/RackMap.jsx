@@ -92,6 +92,7 @@ export default function RackMap() {
   const inventory = useWarehouseStore(s => s.inventory ?? [])
   const movements = useWarehouseStore(s => s.enrichedMovements ?? [])
   const materials = useWarehouseStore(s => s.materialMasterBase ?? [])
+  const locations = useWarehouseStore(s => s.locations ?? [])
   const assignMaterial = useWarehouseStore(s => s.assignMaterial)
   const addMovement = useWarehouseStore(s => s.addMovement)
   const currentUser = useWarehouseStore(s => s.currentUser || "Warehouse Manager")
@@ -99,6 +100,23 @@ export default function RackMap() {
 
   const [selectedCell, setSelectedCell] = React.useState(null)
   const [selectedBay, setSelectedBay] = React.useState("all")
+
+  // Material IDs already allocated to any slot (excluding current cell if applicable)
+  const allocatedMaterialIds = React.useMemo(() => {
+    const set = new Set()
+    locations.forEach(loc => {
+      if (selectedCell && loc.locationId === selectedCell.locationId) return
+      const rawId = loc.materialId || ''
+      const cleanId = rawId.includes(' (') ? rawId.split(' (')[0].trim() : rawId.includes(' - ') ? rawId.split(' - ')[0].trim() : rawId.trim()
+      if (cleanId) set.add(cleanId.toUpperCase())
+    })
+    return set
+  }, [locations, selectedCell?.locationId])
+
+  // Filter out materials that are already allocated to somewhere else
+  const availableMaterials = React.useMemo(() => {
+    return materials.filter(m => !allocatedMaterialIds.has((m.id || '').toUpperCase()))
+  }, [materials, allocatedMaterialIds])
   
   // Assign Material State (with opening stock, expiry date, batch)
   const [assignMatId, setAssignMatId] = React.useState("")
@@ -720,14 +738,28 @@ export default function RackMap() {
                   
                   <div className="space-y-2.5 text-left bg-background p-3.5 rounded-lg border border-border/40 shadow-sm">
                     <div>
-                      <label className="text-[11px] font-semibold text-foreground block mb-1">
-                        Assign Material <span className="text-destructive">*</span>
-                      </label>
+                      <div className="flex items-center justify-between mb-1">
+                        <label className="text-[11px] font-semibold text-foreground">
+                          Assign Material <span className="text-destructive">*</span>
+                        </label>
+                        {availableMaterials.length === 0 ? (
+                          <span className="text-[10px] text-amber-500 font-medium">All materials allocated</span>
+                        ) : (
+                          <span className="text-[10px] text-muted-foreground font-mono">{availableMaterials.length} available</span>
+                        )}
+                      </div>
                       <Combobox
-                        options={materials.map(m => ({ value: m.id, label: m.name || m.description, sub: `${m.id} · Unit: ${m.unit || 'PCS'}` }))}
+                        options={availableMaterials.map(m => ({
+                          value: m.id,
+                          label: m.name || m.description,
+                          sub: `${m.id} · Unit: ${m.unit || 'PCS'}`
+                        }))}
                         value={assignMatId}
-                        onChange={setAssignMatId}
-                        placeholder="Search and select material..."
+                        onChange={v => {
+                          const match = availableMaterials.find(m => m.id.toLowerCase() === v.trim().toLowerCase() || (m.name || m.description).toLowerCase() === v.trim().toLowerCase())
+                          setAssignMatId(match ? match.id : v.toUpperCase())
+                        }}
+                        placeholder={availableMaterials.length === 0 ? "No materials available (all allocated)" : "Search and select material..."}
                         className="w-full text-xs"
                       />
                     </div>

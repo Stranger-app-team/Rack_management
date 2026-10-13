@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { useToast } from "@/components/ui/toast"
 import { LEVELS, CATEGORIES, exportToCSV } from "@/lib/utils"
 import { computeLocationId } from "@/lib/store/useWarehouseStore"
+import { Combobox } from "@/components/ui/combobox"
 import { Plus, Search, MapPin, Link, Unlink, Download, ArrowLeftRight } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 export default function LocationMaster() {
@@ -36,7 +37,25 @@ export default function LocationMaster() {
   const cleanAssignMatId = assignMatId ? (assignMatId.includes(" (") ? assignMatId.split(" (")[0].trim() : assignMatId.trim()) : ""
   const selectedAssignMat = materials.find(m => m.id === cleanAssignMatId || m.id === assignMatId)
 
-  const assignFilteredMaterials = materials.filter(m => {
+  // Material IDs already allocated to any slot
+  const allocatedMaterialIds = React.useMemo(() => {
+    const set = new Set()
+    locations.forEach(loc => {
+      // If modal is assigning to a specific location, ignore that location if already set
+      if (assignOpen && loc.locationId === assignOpen) return
+      const rawId = loc.materialId || ''
+      const cleanId = rawId.includes(' (') ? rawId.split(' (')[0].trim() : rawId.includes(' - ') ? rawId.split(' - ')[0].trim() : rawId.trim()
+      if (cleanId) set.add(cleanId.toUpperCase())
+    })
+    return set
+  }, [locations, assignOpen])
+
+  // Filter out materials that are already allocated somewhere else
+  const unallocatedMaterials = React.useMemo(() => {
+    return materials.filter(m => !allocatedMaterialIds.has((m.id || '').toUpperCase()))
+  }, [materials, allocatedMaterialIds])
+
+  const assignFilteredMaterials = unallocatedMaterials.filter(m => {
     if (!assignSearch.trim()) return true
     const term = assignSearch.toLowerCase()
     const name = (m.name || m.description || "").toLowerCase()
@@ -478,18 +497,28 @@ export default function LocationMaster() {
           </DialogHeader>
           <div className="px-6 space-y-4 max-h-[70vh] overflow-y-auto">
             <div className="space-y-1.5">
-              <Label>Select Material</Label>
-              <Input 
-                list="lm-materials"
+              <div className="flex items-center justify-between">
+                <Label>Select Material</Label>
+                {unallocatedMaterials.length === 0 ? (
+                  <span className="text-[11px] text-amber-500 font-medium">All materials allocated</span>
+                ) : (
+                  <span className="text-[11px] text-muted-foreground font-mono">{unallocatedMaterials.length} available</span>
+                )}
+              </div>
+              <Combobox
+                options={unallocatedMaterials.map(m => ({
+                  value: m.id,
+                  label: m.name || m.description,
+                  sub: `${m.id} · Unit: ${m.unit || 'PCS'} · ${m.category || 'General'}`
+                }))}
                 value={gaMat}
-                onChange={e => setGaMat(e.target.value.toUpperCase())}
-                placeholder="Type or select material ID..."
+                onChange={v => {
+                  const match = unallocatedMaterials.find(m => m.id.toLowerCase() === v.trim().toLowerCase() || (m.name || m.description).toLowerCase() === v.trim().toLowerCase())
+                  setGaMat(match ? match.id : v.toUpperCase())
+                }}
+                placeholder={unallocatedMaterials.length === 0 ? "No available materials (all allocated)" : "Search and select material..."}
+                className="w-full text-xs"
               />
-              <datalist id="lm-materials">
-                {materials.map(m => (
-                  <option key={m.id} value={m.id}>{m.name || m.description}</option>
-                ))}
-              </datalist>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
