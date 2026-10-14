@@ -198,8 +198,89 @@ export default function Shipments() {
                 </Button>
               </div>
               
-              <div className="rounded-lg border border-border bg-card overflow-hidden">
-                <table className="w-full wms-table">
+              {/* Mobile Card Layout for items (visible on small screens) */}
+              <div className="sm:hidden space-y-3">
+                {items.map((item, index) => {
+                  const selectedMatId = extractMaterialId(item.materialId)
+                  
+                  let rowLocationOptions = locationOptionsIn
+                  if (type === 'OUT' && selectedMatId) {
+                    rowLocationOptions = inventory
+                      .filter(i => i.materialId === selectedMatId && i.currentStock > 0)
+                      .map(i => ({ value: i.locationId, sub: `Stock: ${i.currentStock}` }))
+                  } else if (type === 'OUT') {
+                    rowLocationOptions = []
+                  } else if (type === 'IN' && selectedMatId) {
+                    rowLocationOptions = locations.map(l => {
+                      const rawId = l.materialId || ''
+                      const lMatId = (rawId.includes(' - ') ? rawId.split(' - ')[0] : rawId.includes(' (') ? rawId.split(' (')[0] : rawId).trim()
+                      const isAssigned = lMatId.toLowerCase() === selectedMatId.toLowerCase()
+                      const invItem = inventory.find(i => i.locationId === l.locationId && (i.materialId || '').toLowerCase() === selectedMatId.toLowerCase())
+                      const stock = invItem ? invItem.currentStock : 0
+                      const isPrimary = isAssigned || stock > 0
+                      return {
+                        value: l.locationId,
+                        sub: isAssigned ? `★ Primary Assigned (Stock: ${stock})` : (stock > 0 ? `Active Stock: ${stock}` : (l.materialId ? `Assigned to ${l.materialId}` : 'Available')),
+                        isPrimary
+                      }
+                    }).sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary))
+                  }
+
+                  return (
+                    <div key={item.id} className="p-3.5 rounded-xl border border-border bg-card space-y-3 shadow-xs">
+                      <div className="flex items-center justify-between pb-2 border-b border-border">
+                        <span className="text-xs font-bold text-foreground">Item #{index + 1}</span>
+                        <button 
+                          type="button" 
+                          onClick={() => removeItem(item.id)}
+                          disabled={items.length === 1}
+                          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors disabled:opacity-30 disabled:hover:text-muted-foreground font-medium"
+                        >
+                          <Trash2 size={14} /> Remove
+                        </button>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-xs font-semibold text-muted-foreground">Material <span className="text-destructive">*</span></label>
+                        <Combobox 
+                          options={materialOptions}
+                          value={item.materialId}
+                          onChange={val => updateItem(item.id, 'materialId', val)}
+                          placeholder="Select Material"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-muted-foreground">Location <span className="text-destructive">*</span></label>
+                          <Combobox 
+                            options={rowLocationOptions}
+                            value={item.locationId}
+                            onChange={val => updateItem(item.id, 'locationId', val)}
+                            placeholder={type === 'OUT' && !selectedMatId ? "Select Mat first" : "Select Location"}
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-xs font-semibold text-muted-foreground">Quantity <span className="text-destructive">*</span></label>
+                          <Input 
+                            type="number" 
+                            min="1" 
+                            className="text-right" 
+                            value={item.quantity} 
+                            onChange={e => updateItem(item.id, 'quantity', e.target.value)} 
+                            placeholder="Qty" 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {/* Desktop Table Layout for items (hidden on small screens) */}
+              <div className="hidden sm:block rounded-lg border border-border bg-card overflow-x-auto">
+                <table className="w-full wms-table min-w-[550px]">
                   <thead>
                     <tr>
                       <th className="w-2/5">Material</th>
@@ -209,7 +290,7 @@ export default function Shipments() {
                     </tr>
                   </thead>
                   <tbody>
-                    {items.map((item, index) => {
+                    {items.map((item) => {
                       const selectedMatId = extractMaterialId(item.materialId)
                       
                       // For OUTBOUND, filter locations that have stock for this material
@@ -293,55 +374,58 @@ export default function Shipments() {
       </Card>
 
       <Card className="glass mt-4">
-        <CardHeader className="pb-3 border-b border-border/50">
-          <CardTitle className="text-sm">Recent Bulk Items</CardTitle>
+        <CardHeader className="pb-3 border-b border-border/50 flex flex-row items-center justify-between">
+          <CardTitle className="text-sm font-bold">Recent Bulk Items</CardTitle>
+          <span className="text-[10px] text-muted-foreground sm:hidden font-medium">⇄ Scroll table</span>
         </CardHeader>
         <CardContent className="p-0">
-          <table className="w-full wms-table text-xs">
-            <thead>
-              <tr>
-                <th className="text-left">Date</th>
-                <th className="text-left">Reference</th>
-                <th className="text-left">Material</th>
-                <th className="text-left">Location</th>
-                <th className="text-center">Type</th>
-                <th className="text-right">Qty</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentShipments.map(m => (
-                <tr key={m.id}>
-                  <td className="text-muted-foreground whitespace-nowrap">{m.date}</td>
-                  <td className="font-mono text-muted-foreground">
-                    {m.reference}
-                    {m.notes?.startsWith('Driver: ') && (
-                      <span className="ml-1.5 text-[10px] text-muted-foreground/70">
-                        ({m.notes.split(' | ')[0].replace('Driver: ', '')})
-                      </span>
-                    )}
-                  </td>
-                  <td>
-                    <p className="font-medium text-foreground">{m.materialDesc || m.materialId}</p>
-                    <p className="text-[10px] font-mono text-muted-foreground">{m.materialId}</p>
-                  </td>
-                  <td className="font-mono">{m.locationId}</td>
-                  <td className="text-center">
-                    <span className={m.type === 'IN' ? 'text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30' : 'text-red-800 dark:text-red-300 font-extrabold px-1.5 py-0.5 rounded bg-red-500/15 border border-red-500/30'}>
-                      {m.type}
-                    </span>
-                  </td>
-                  <td className="text-right font-mono font-medium">
-                    {m.quantity} <span className="text-muted-foreground text-[10px] ml-0.5">{m.unit}</span>
-                  </td>
-                </tr>
-              ))}
-              {recentShipments.length === 0 && (
+          <div className="overflow-x-auto w-full">
+            <table className="w-full wms-table text-xs min-w-[620px]">
+              <thead>
                 <tr>
-                  <td colSpan={6} className="text-center py-6 text-muted-foreground">No recent bulk shipments found.</td>
+                  <th className="text-left">Date</th>
+                  <th className="text-left">Reference</th>
+                  <th className="text-left">Material</th>
+                  <th className="text-left">Location</th>
+                  <th className="text-center">Type</th>
+                  <th className="text-right">Qty</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {recentShipments.map(m => (
+                  <tr key={m.id}>
+                    <td className="text-muted-foreground whitespace-nowrap">{m.date}</td>
+                    <td className="font-mono text-muted-foreground">
+                      {m.reference}
+                      {m.notes?.startsWith('Driver: ') && (
+                        <span className="ml-1.5 text-[10px] text-muted-foreground/70">
+                          ({m.notes.split(' | ')[0].replace('Driver: ', '')})
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      <p className="font-medium text-foreground">{m.materialDesc || m.materialId}</p>
+                      <p className="text-[10px] font-mono text-muted-foreground">{m.materialId}</p>
+                    </td>
+                    <td className="font-mono">{m.locationId}</td>
+                    <td className="text-center">
+                      <span className={m.type === 'IN' ? 'text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30' : 'text-red-800 dark:text-red-300 font-extrabold px-1.5 py-0.5 rounded bg-red-500/15 border border-red-500/30'}>
+                        {m.type}
+                      </span>
+                    </td>
+                    <td className="text-right font-mono font-medium">
+                      {m.quantity} <span className="text-muted-foreground text-[10px] ml-0.5">{m.unit}</span>
+                    </td>
+                  </tr>
+                ))}
+                {recentShipments.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="text-center py-6 text-muted-foreground">No recent bulk shipments found.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </CardContent>
       </Card>
     </div>
