@@ -173,26 +173,17 @@ export default function Inventory() {
                     </td>
                     <td><CategoryBadge category={item.category} /></td>
                     <td><LocationBadge locationId={item.locationId} /></td>
-                    <td className="text-right">
-                      <span className="inline-block px-2.5 py-1 rounded-md bg-primary/15 text-primary font-bold border border-primary/30 shadow-sm">
-                        <span className="font-mono text-sm">{Number(item.currentStock).toFixed(2)}</span>
-                        <span className="text-[10px] uppercase ml-1 opacity-80">{item.unit}</span>
-                      </span>
+                    <td className="text-right font-mono text-sm font-bold text-blue-600 dark:text-blue-400">
+                      {Number(item.currentStock).toFixed(2)} <span className="text-xs text-muted-foreground font-normal">{item.unit}</span>
                     </td>
-                    <td className="text-right">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30">
-                        {item.stockIn}
-                      </span>
+                    <td className="text-right font-mono text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      {item.stockIn}
                     </td>
-                    <td className="text-right">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/15 text-red-800 dark:text-red-300 font-mono text-xs font-bold border border-red-500/30">
-                        {item.stockOut}
-                      </span>
+                    <td className="text-right font-mono text-sm font-bold text-red-600 dark:text-red-400">
+                      {item.stockOut}
                     </td>
-                    <td className="text-right">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-secondary/70 text-foreground font-mono text-xs font-semibold border border-border">
-                        {item.reorderLevel} <span className="text-[10px] uppercase ml-1 opacity-70">{item.unit}</span>
-                      </span>
+                    <td className="text-right font-mono text-sm font-medium text-muted-foreground">
+                      {item.reorderLevel} <span className="text-xs font-normal">{item.unit}</span>
                     </td>
                     <td className="text-center"><StockBadge status={item.status} /></td>
                   </tr>
