@@ -432,21 +432,23 @@ export default function StockMovement() {
               <ArrowLeftRight size={16} className="text-primary" />
               Stock Movements ({filtered.length})
             </CardTitle>
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Button size="sm" variant="outline" onClick={exportCSV} className="flex-1 sm:flex-none">
-                <Download size={13} /> Export CSV
-              </Button>
-              <Button size="sm" variant="outline" className="flex-1 sm:flex-none border-blue-500/50 text-blue-500 hover:bg-blue-500/10" onClick={() => {
-                setTransferForm({ mode: "TRANSFER", date: new Date().toISOString().slice(0, 10), materialId: "", materialText: "", locationId: "", toLocationId: "", quantity: "", unit: "", user: currentUser || "User" })
-                setTransferOpen(true)
-              }}>
-                <ArrowLeftRight size={15} className="mr-1" /> Transfer / Swap
-              </Button>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+              <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
+                <Button size="sm" variant="outline" onClick={exportCSV} className="w-full sm:w-auto">
+                  <Download size={13} className="shrink-0" /> Export CSV
+                </Button>
+                <Button size="sm" variant="outline" className="w-full sm:w-auto border-blue-500/50 text-blue-500 hover:bg-blue-500/10" onClick={() => {
+                  setTransferForm({ mode: "TRANSFER", date: new Date().toISOString().slice(0, 10), materialId: "", materialText: "", locationId: "", toLocationId: "", quantity: "", unit: "", user: currentUser || "User" })
+                  setTransferOpen(true)
+                }}>
+                  <ArrowLeftRight size={14} className="shrink-0" /> Transfer / Swap
+                </Button>
+              </div>
               <Button size="sm" onClick={() => {
                 setForm({ date: new Date().toISOString().slice(0, 10), materialId: "", materialText: "", locationId: "", type: "IN", quantity: "", unit: "", reference: "", user: currentUser || "User", notes: "" })
                 setOpen(true)
-              }} className="flex-1 sm:flex-none">
-                <Plus size={15} /> Add Movement
+              }} className="w-full sm:w-auto font-semibold">
+                <Plus size={15} className="shrink-0" /> Add Movement
               </Button>
             </div>
           </div>
