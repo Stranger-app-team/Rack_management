@@ -16,31 +16,31 @@ import {
 
 function KPICard({ title, value, sub, icon: Icon, color, trend, onClick }) {
   const colors = {
-    blue:   { bg: "from-blue-500/10 to-blue-500/5 dark:from-blue-600/20 dark:to-blue-500/5",   icon: "bg-blue-500/15 text-blue-600 dark:text-blue-400",  border: "border-blue-500/20" },
-    green:  { bg: "from-emerald-500/10 to-emerald-500/5 dark:from-emerald-600/20 dark:to-emerald-500/5", icon: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400", border: "border-emerald-500/20" },
-    amber:  { bg: "from-amber-500/10 to-amber-500/5 dark:from-amber-600/20 dark:to-amber-500/5",  icon: "bg-amber-500/15 text-amber-600 dark:text-amber-400",  border: "border-amber-500/20" },
-    cyan:   { bg: "from-cyan-500/10 to-cyan-500/5 dark:from-cyan-600/20 dark:to-cyan-500/5",    icon: "bg-cyan-500/15 text-cyan-600 dark:text-cyan-400",    border: "border-cyan-500/20" },
+    blue:   { bg: "from-blue-500/12 to-blue-500/5 dark:from-blue-600/25 dark:to-blue-500/5",   icon: "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-500/30",  border: "border-blue-300 dark:border-blue-500/30" },
+    green:  { bg: "from-emerald-500/12 to-emerald-500/5 dark:from-emerald-600/25 dark:to-emerald-500/5", icon: "bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30", border: "border-emerald-300 dark:border-emerald-500/30" },
+    amber:  { bg: "from-amber-500/12 to-amber-500/5 dark:from-amber-600/25 dark:to-amber-500/5",  icon: "bg-amber-100 dark:bg-amber-500/20 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-500/30",  border: "border-amber-300 dark:border-amber-500/30" },
+    cyan:   { bg: "from-cyan-500/12 to-cyan-500/5 dark:from-cyan-600/25 dark:to-cyan-500/5",    icon: "bg-cyan-100 dark:bg-cyan-500/20 text-cyan-900 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-500/30",    border: "border-cyan-300 dark:border-cyan-500/30" },
   }
   const c = colors[color] || colors.blue
   return (
     <div
       onClick={onClick}
-      className={`glass-hover rounded-2xl p-5 bg-gradient-to-br ${c.bg} border ${c.border} cursor-pointer`}
+      className={`glass-hover rounded-2xl p-5 bg-gradient-to-br ${c.bg} border ${c.border} cursor-pointer shadow-xs`}
     >
       <div className="flex items-start justify-between mb-3">
         <div className={`rounded-xl p-2.5 ${c.icon}`}>
           <Icon size={20} />
         </div>
         {trend !== undefined && (
-          <span className={`text-xs font-semibold flex items-center gap-1 ${trend >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
+          <span className={`text-xs font-bold flex items-center gap-1 ${trend >= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-red-700 dark:text-red-400"}`}>
             {trend >= 0 ? <TrendingUp size={12}/> : <TrendingDown size={12}/>}
             {Math.abs(trend)}%
           </span>
         )}
       </div>
-      <p className="text-2xl font-bold text-foreground mb-0.5">{value}</p>
-      <p className="text-sm font-medium text-foreground/80">{title}</p>
-      {sub && <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>}
+      <p className="text-2xl font-extrabold text-foreground mb-0.5">{value}</p>
+      <p className="text-sm font-bold text-foreground/90">{title}</p>
+      {sub && <p className="text-xs font-medium text-muted-foreground mt-0.5">{sub}</p>}
     </div>
   )
 }
@@ -214,7 +214,7 @@ export default function Dashboard() {
         {/* Reorder Alerts */}
         <Card className="glass">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-amber-400">
+            <CardTitle className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-bold">
               <AlertTriangle size={16} />
               Reorder Alerts ({reorderItems.length})
             </CardTitle>
@@ -224,7 +224,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="p-0">
             {reorderItems.length === 0 ? (
-              <div className="flex items-center gap-2 text-emerald-400 text-sm p-5">
+              <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 font-semibold text-sm p-5">
                 <CheckCircle2 size={16}/> All stock levels are healthy
               </div>
             ) : (
@@ -235,10 +235,10 @@ export default function Dashboard() {
                     {reorderItems.slice(0, 6).map(item => (
                       <tr key={item.materialId}>
                         <td>
-                          <p className="font-medium text-foreground truncate max-w-[150px]">{item.materialDesc}</p>
+                          <p className="font-bold text-foreground truncate max-w-[150px]">{item.materialDesc}</p>
                           <LocationBadge locationId={item.locationId} className="mt-0.5" />
                         </td>
-                        <td className="text-center font-mono text-sm">
+                        <td className="text-center font-mono font-semibold text-sm">
                           {item.currentStock.toFixed(2)} <span className="text-muted-foreground">{item.unit}</span>
                         </td>
                         <td className="text-right"><StockBadge status={item.status} /></td>
@@ -254,8 +254,8 @@ export default function Dashboard() {
         {/* Recent Movements */}
         <Card className="glass">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <ArrowLeftRight size={16} className="text-cyan-400"/>
+            <CardTitle className="flex items-center gap-2 text-cyan-800 dark:text-cyan-300 font-bold">
+              <ArrowLeftRight size={16} />
               Recent Movements
             </CardTitle>
             <Button size="sm" variant="outline" onClick={() => navigate("/movements")}>
@@ -270,16 +270,16 @@ export default function Dashboard() {
                   {recentMovs.map(m => (
                     <tr key={m.id}>
                       <td>
-                        <p className="font-medium text-foreground truncate max-w-[130px]">{m.materialDesc || m.materialId}</p>
-                        <p className="text-[11px] text-muted-foreground">{m.user}</p>
+                        <p className="font-bold text-foreground truncate max-w-[130px]">{m.materialDesc || m.materialId}</p>
+                        <p className="text-[11px] text-muted-foreground font-medium">{m.user}</p>
                       </td>
-                      <td className="text-center font-mono text-sm">{m.quantity} <span className="text-muted-foreground text-xs">{m.unit}</span></td>
+                      <td className="text-center font-mono font-semibold text-sm">{m.quantity} <span className="text-muted-foreground text-xs">{m.unit}</span></td>
                       <td className="text-center">
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-md ${m.type === "IN" ? "bg-emerald-500/15 text-emerald-400" : "bg-red-500/15 text-red-400"}`}>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-md border ${m.type === "IN" ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/40" : "bg-red-500/15 text-red-800 dark:text-red-300 border-red-500/40"}`}>
                           {m.type}
                         </span>
                       </td>
-                      <td className="text-right text-xs text-muted-foreground">{formatDate(m.date)}</td>
+                      <td className="text-right text-xs text-muted-foreground font-medium">{formatDate(m.date)}</td>
                     </tr>
                   ))}
                 </tbody>

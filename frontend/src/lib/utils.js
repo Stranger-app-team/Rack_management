@@ -6,19 +6,19 @@ export function cn(...inputs) {
 }
 
 export const CATEGORY_COLORS = {
-  AC:         { bg: "bg-cyan-500/15",   border: "border-cyan-500/40",   text: "text-cyan-600 dark:text-cyan-400",   dot: "#06b6d4" },
-  CARPENTER:  { bg: "bg-amber-500/15",  border: "border-amber-500/40",  text: "text-amber-600 dark:text-amber-400",  dot: "#f59e0b" },
-  CIVIL:      { bg: "bg-orange-500/15", border: "border-orange-500/40", text: "text-orange-600 dark:text-orange-400", dot: "#f97316" },
-  DECOR:      { bg: "bg-pink-500/15",   border: "border-pink-500/40",   text: "text-pink-600 dark:text-pink-400",   dot: "#ec4899" },
-  ELECTRIC:   { bg: "bg-yellow-500/15", border: "border-yellow-500/40", text: "text-yellow-600 dark:text-yellow-400", dot: "#eab308" },
-  FURNISHING: { bg: "bg-purple-500/15", border: "border-purple-500/40", text: "text-purple-600 dark:text-purple-400", dot: "#a855f7" },
-  PLUMBER:    { bg: "bg-blue-500/15",   border: "border-blue-500/40",   text: "text-blue-600 dark:text-blue-400",   dot: "#3b82f6" },
+  AC:         { bg: "bg-cyan-500/15 dark:bg-cyan-500/20",   border: "border-cyan-600/50 dark:border-cyan-400/50",   text: "text-cyan-800 dark:text-cyan-200",   dot: "#06b6d4" },
+  CARPENTER:  { bg: "bg-amber-500/15 dark:bg-amber-500/20",  border: "border-amber-600/50 dark:border-amber-400/50",  text: "text-amber-900 dark:text-amber-200",  dot: "#f59e0b" },
+  CIVIL:      { bg: "bg-orange-500/15 dark:bg-orange-500/20", border: "border-orange-600/50 dark:border-orange-400/50", text: "text-orange-900 dark:text-orange-200", dot: "#f97316" },
+  DECOR:      { bg: "bg-pink-500/15 dark:bg-pink-500/20",   border: "border-pink-600/50 dark:border-pink-400/50",   text: "text-pink-900 dark:text-pink-200",   dot: "#ec4899" },
+  ELECTRIC:   { bg: "bg-yellow-500/15 dark:bg-yellow-500/20", border: "border-yellow-600/50 dark:border-yellow-400/50", text: "text-yellow-900 dark:text-yellow-200", dot: "#eab308" },
+  FURNISHING: { bg: "bg-purple-500/15 dark:bg-purple-500/20", border: "border-purple-600/50 dark:border-purple-400/50", text: "text-purple-900 dark:text-purple-200", dot: "#a855f7" },
+  PLUMBER:    { bg: "bg-blue-500/15 dark:bg-blue-500/20",   border: "border-blue-600/50 dark:border-blue-400/50",   text: "text-blue-900 dark:text-blue-200",   dot: "#3b82f6" },
 }
 
 export const STATUS_CONFIG = {
-  OK:      { label: "OK",      bg: "bg-emerald-500/15", border: "border-emerald-500/40", text: "text-emerald-600 dark:text-emerald-400", dot: "ok" },
-  REORDER: { label: "REORDER", bg: "bg-amber-500/15",   border: "border-amber-500/40",   text: "text-amber-600 dark:text-amber-400",   dot: "reorder" },
-  EMPTY:   { label: "EMPTY",   bg: "bg-red-500/15",     border: "border-red-500/40",     text: "text-red-600 dark:text-red-400",     dot: "empty" },
+  OK:      { label: "OK",      bg: "bg-emerald-500/15 dark:bg-emerald-500/25", border: "border-emerald-600/50 dark:border-emerald-400/50", text: "text-emerald-800 dark:text-emerald-200 font-bold", dot: "ok" },
+  REORDER: { label: "REORDER", bg: "bg-amber-500/15 dark:bg-amber-500/25",   border: "border-amber-600/50 dark:border-amber-400/50",   text: "text-amber-800 dark:text-amber-200 font-bold", dot: "reorder" },
+  EMPTY:   { label: "EMPTY",   bg: "bg-red-500/15 dark:bg-red-500/25",     border: "border-red-600/50 dark:border-red-400/50",     text: "text-red-800 dark:text-red-200 font-bold",     dot: "empty" },
 }
 
 export const LEVEL_ORDER = ["GL1","GL2","GL3","SL4","SL5","SL6"]

@@ -100,7 +100,7 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
   return (
     <div ref={wrapperRef} className="relative w-full">
       <div className={cn(
-        "flex h-9 w-full items-center justify-between rounded-lg border border-input/80 bg-background px-3 py-1.5 text-xs transition-colors hover:border-input focus-within:border-primary/80 focus-within:ring-2 focus-within:ring-primary/20",
+        "flex h-9 w-full items-center justify-between rounded-lg border border-border bg-background px-3 py-1.5 text-xs font-medium transition-colors hover:border-input focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 shadow-2xs",
         className
       )}>
         <input
@@ -110,10 +110,10 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full bg-transparent outline-none placeholder:text-muted-foreground text-foreground text-xs"
+          className="w-full bg-transparent outline-none placeholder:text-muted-foreground text-foreground text-xs font-medium"
         />
         <ChevronDown 
-          className={cn("h-4 w-4 opacity-50 ml-2 cursor-pointer shrink-0 transition-transform duration-200", open && "rotate-180 opacity-90 text-primary")} 
+          className={cn("h-4 w-4 opacity-60 ml-2 cursor-pointer shrink-0 transition-transform duration-200", open && "rotate-180 opacity-100 text-primary")} 
           onClick={() => setOpen(!open)} 
         />
       </div>
@@ -121,10 +121,10 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
         <ul 
           ref={dropdownRef} 
           style={dropdownStyle} 
-          className="z-[9999] max-h-64 overflow-y-auto rounded-xl border border-border/80 bg-popover text-popover-foreground shadow-2xl p-1.5 outline-none animate-in fade-in-0 zoom-in-95 backdrop-blur-md space-y-1"
+          className="z-[9999] max-h-64 overflow-y-auto rounded-xl border border-border bg-popover text-popover-foreground shadow-2xl p-1.5 outline-none animate-in fade-in-0 zoom-in-95 space-y-1"
         >
           {filtered.length === 0 ? (
-            <li className="px-3 py-4 text-xs text-muted-foreground text-center">
+            <li className="px-3 py-4 text-xs text-muted-foreground font-medium text-center">
               No matching materials found.
             </li>
           ) : (
@@ -139,25 +139,25 @@ export function Combobox({ value, onChange, options, placeholder = "Select or ty
                   key={val || i}
                   onMouseDown={(e) => { e.preventDefault(); handleSelect(opt) }}
                   className={cn(
-                    "relative flex flex-col w-full cursor-pointer select-none rounded-lg py-2 px-2.5 text-xs outline-none transition-colors hover:bg-accent/80 hover:text-accent-foreground",
-                    isSelected ? "bg-primary/15 text-primary font-medium border border-primary/20" : "text-foreground"
+                    "relative flex flex-col w-full cursor-pointer select-none rounded-lg py-2 px-2.5 text-xs outline-none transition-colors hover:bg-accent hover:text-accent-foreground",
+                    isSelected ? "bg-primary/15 text-primary font-bold border border-primary/30" : "text-foreground font-medium"
                   )}
                 >
                   <div className="flex items-center justify-between w-full gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       {val && (
-                        <span className="font-mono text-[10px] font-bold text-primary px-1.5 py-0.5 rounded bg-primary/10 border border-primary/20 shrink-0">
+                        <span className="font-mono text-[10px] font-bold text-primary px-1.5 py-0.5 rounded bg-primary/10 border border-primary/30 shrink-0">
                           {val}
                         </span>
                       )}
-                      <span className="truncate font-medium">{label}</span>
+                      <span className="truncate font-bold">{label}</span>
                     </div>
                     {isSelected && (
                       <Check className="h-3.5 w-3.5 text-primary shrink-0 ml-1" />
                     )}
                   </div>
                   {sub && (
-                    <span className="text-[10px] text-muted-foreground truncate mt-0.5 pl-0.5">
+                    <span className="text-[10px] text-muted-foreground font-medium truncate mt-0.5 pl-0.5">
                       {sub}
                     </span>
                   )}

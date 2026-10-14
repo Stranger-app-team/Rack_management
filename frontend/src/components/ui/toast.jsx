@@ -1,4 +1,4 @@
-﻿import * as React from "react"
+import * as React from "react"
 import { cn } from "@/lib/utils"
 import { X, CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react"
 
@@ -17,10 +17,10 @@ export function ToastProvider({ children }) {
 
   const icons = { default: Info, success: CheckCircle2, warning: AlertTriangle, destructive: XCircle }
   const styles = {
-    default: "border-border bg-card text-foreground",
-    success: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
-    warning: "border-amber-500/30 bg-amber-500/10 text-amber-400",
-    destructive: "border-red-500/30 bg-red-500/10 text-red-400",
+    default: "border-border bg-card text-foreground shadow-xl",
+    success: "border-emerald-600/50 dark:border-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/80 text-emerald-950 dark:text-emerald-100 shadow-xl",
+    warning: "border-amber-600/50 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-950/80 text-amber-950 dark:text-amber-100 shadow-xl",
+    destructive: "border-red-600/50 dark:border-red-500/40 bg-red-50 dark:bg-red-950/80 text-red-950 dark:text-red-100 shadow-xl",
   }
 
   return (

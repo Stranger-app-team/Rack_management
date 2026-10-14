@@ -111,7 +111,7 @@ export default function RackManager() {
                     <CardTitle className="text-lg font-bold">{rack.id}</CardTitle>
                     <p className="text-xs text-muted-foreground">{rack.type} · {rack.side}</p>
                   </div>
-                  <span className={`text-xs font-semibold px-2 py-1 rounded-lg border ${rack.status === "Active" ? "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" : "bg-muted text-muted-foreground border-border"}`}>
+                  <span className={`text-xs font-bold px-2 py-1 rounded-lg border ${rack.status === "Active" ? "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/40" : "bg-muted text-muted-foreground border-border"}`}>
                     {rack.status}
                   </span>
                 </div>

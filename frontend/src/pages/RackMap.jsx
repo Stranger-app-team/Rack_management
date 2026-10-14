@@ -18,22 +18,22 @@ function RackCell({ location, onClick, rackCellState }) {
   const isAllocated = rackCellState === "allocated"
 
   const stateStyles = {
-    occupied:    "border-blue-500/40 bg-blue-500/10 hover:border-blue-400 hover:bg-blue-500/20 text-blue-950 dark:text-blue-100",
-    available:   "border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-400/60 hover:bg-emerald-500/15 text-emerald-950 dark:text-emerald-200",
-    allocated:   "border-purple-500/40 bg-purple-500/8 hover:border-purple-400 hover:bg-purple-500/15 text-purple-950 dark:text-purple-100",
-    reorder:     "border-amber-500/40 bg-amber-500/10 hover:border-amber-400 hover:bg-amber-500/20 text-amber-950 dark:text-amber-100",
-    "empty-crit":"border-red-500/40 bg-red-500/10 hover:border-red-400 hover:bg-red-500/20 text-red-950 dark:text-red-100",
-    unassigned:  "border-border/40 bg-secondary/10 hover:border-border text-muted-foreground",
-  }[rackCellState] || "border-border/40 bg-secondary/10 hover:border-border text-muted-foreground"
+    occupied:    "border-blue-500/60 bg-blue-100/70 dark:bg-blue-950/40 hover:border-blue-600 dark:hover:border-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/40 text-blue-950 dark:text-blue-100 shadow-2xs",
+    available:   "border-emerald-500/60 bg-emerald-100/70 dark:bg-emerald-950/40 hover:border-emerald-600 dark:hover:border-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-950 dark:text-emerald-100 shadow-2xs",
+    allocated:   "border-purple-500/60 bg-purple-100/70 dark:bg-purple-950/40 hover:border-purple-600 dark:hover:border-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/40 text-purple-950 dark:text-purple-100 shadow-2xs",
+    reorder:     "border-amber-500/70 bg-amber-100/80 dark:bg-amber-950/40 hover:border-amber-600 dark:hover:border-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/40 text-amber-950 dark:text-amber-100 shadow-2xs",
+    "empty-crit":"border-red-500/70 bg-red-100/80 dark:bg-red-950/40 hover:border-red-600 dark:hover:border-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 text-red-950 dark:text-red-100 shadow-2xs",
+    unassigned:  "border-border bg-card hover:border-primary/50 text-muted-foreground",
+  }[rackCellState] || "border-border bg-card hover:border-primary/50 text-muted-foreground"
 
   const dotColors = {
-    occupied:    "bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]",
-    available:   "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]",
-    allocated:   "bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.6)]",
-    reorder:     "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)] animate-pulse",
-    "empty-crit":"bg-red-400 shadow-[0_0_8px_rgba(248,113,113,0.6)] animate-pulse",
-    unassigned:  "bg-muted-foreground/30",
-  }[rackCellState] || "bg-muted-foreground/30"
+    occupied:    "bg-blue-600 dark:bg-blue-400 shadow-[0_0_8px_rgba(37,99,235,0.7)]",
+    available:   "bg-emerald-600 dark:bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.7)]",
+    allocated:   "bg-purple-600 dark:bg-purple-400 shadow-[0_0_8px_rgba(168,85,247,0.7)]",
+    reorder:     "bg-amber-600 dark:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.8)] animate-pulse",
+    "empty-crit":"bg-red-600 dark:bg-red-400 shadow-[0_0_8px_rgba(239,68,68,0.8)] animate-pulse",
+    unassigned:  "bg-muted-foreground/50",
+  }[rackCellState] || "bg-muted-foreground/50"
 
   const slotLabel = location.slot.startsWith("A") || location.slot.startsWith("B") || location.slot.startsWith("C") || location.slot.startsWith("D")
     ? `Side ${location.slot}`
@@ -49,32 +49,32 @@ function RackCell({ location, onClick, rackCellState }) {
     >
       {/* Top row: Slot / Side label + Status Dot */}
       <div className="flex items-center justify-between w-full mb-1">
-        <span className="text-[11px] font-bold font-mono text-foreground/90 tracking-tight group-hover:text-foreground">
+        <span className="text-[11px] font-bold font-mono text-foreground tracking-tight">
           {slotLabel}
         </span>
-        <span className={cn("w-2 h-2 rounded-full shrink-0", dotColors)} />
+        <span className={cn("w-2.5 h-2.5 rounded-full shrink-0", dotColors)} />
       </div>
 
       {/* Middle row: Material Description or Available */}
       <div className="my-0.5">
         {location.materialDesc ? (
-          <p className="text-[10px] font-medium text-foreground leading-tight line-clamp-1 group-hover:line-clamp-none transition-all">
+          <p className="text-[10px] font-bold text-foreground leading-tight line-clamp-1 group-hover:line-clamp-none transition-all">
             {location.materialDesc}
           </p>
         ) : (
-          <p className="text-[10px] font-normal text-muted-foreground/60 italic">
+          <p className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300">
             Available
           </p>
         )}
       </div>
 
       {/* Bottom row: Location Code / Quantity */}
-      <div className="flex items-center justify-between mt-1 pt-1 border-t border-slate-200 dark:border-white/5 text-[9px]">
-        <span className="font-mono text-muted-foreground/70 truncate max-w-[85px]">
+      <div className="flex items-center justify-between mt-1 pt-1 border-t border-border/80 text-[9px]">
+        <span className="font-mono font-bold text-foreground/90 truncate max-w-[85px]">
           {location.locationId}
         </span>
         {location.quantity > 0 && (
-          <span className="font-mono font-bold text-foreground/90 shrink-0 ml-1">
+          <span className="font-mono font-extrabold text-foreground shrink-0 ml-1">
             {location.quantity} {location.unit || ""}
           </span>
         )}
@@ -281,11 +281,11 @@ export default function RackMap() {
 
   // Legend items
   const legend = [
-    { label: "Available",   dot: "bg-emerald-400" },
-    { label: "Allocated",   dot: "bg-purple-400" },
-    { label: "Occupied",    dot: "bg-blue-400" },
-    { label: "Reorder Alert",dot: "bg-amber-400" },
-    { label: "Critical Empty",dot:"bg-red-400" },
+    { label: "Available",   dot: "bg-emerald-600 dark:bg-emerald-400" },
+    { label: "Allocated",   dot: "bg-purple-600 dark:bg-purple-400" },
+    { label: "Occupied",    dot: "bg-blue-600 dark:bg-blue-400" },
+    { label: "Reorder Alert",dot: "bg-amber-600 dark:bg-amber-400" },
+    { label: "Critical Empty",dot:"bg-red-600 dark:bg-red-400" },
   ]
 
   // Levels for this rack in standard descending order
@@ -312,7 +312,7 @@ export default function RackMap() {
         <CardContent className="p-4 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 overflow-x-auto max-w-full pb-1 no-scrollbar sm:flex-wrap">
-              <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mr-1 shrink-0">
+              <span className="text-xs text-foreground font-bold uppercase tracking-wider mr-1 shrink-0">
                 Select Rack:
               </span>
               {racks.map(r => (
@@ -326,8 +326,8 @@ export default function RackMap() {
                   className={cn(
                     "px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 border shrink-0",
                     selectedRack === r.id
-                      ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 scale-105"
-                      : "border-border/60 bg-secondary/30 text-muted-foreground hover:text-foreground hover:bg-secondary/60 hover:border-border"
+                      ? "bg-primary text-primary-foreground border-primary shadow-md shadow-primary/25 scale-105"
+                      : "border-border bg-card text-foreground/80 hover:text-foreground hover:bg-secondary/70 hover:border-primary/40"
                   )}
                 >
                   {r.id}
@@ -336,11 +336,11 @@ export default function RackMap() {
             </div>
 
             {/* Legend */}
-            <div className="flex flex-wrap gap-3 sm:gap-4 items-center bg-secondary/20 px-3 py-1.5 rounded-lg border border-border/40">
+            <div className="flex flex-wrap gap-3 sm:gap-4 items-center bg-muted/40 px-3 py-1.5 rounded-lg border border-border">
               {legend.map(l => (
                 <div key={l.label} className="flex items-center gap-1.5">
-                  <span className={cn("w-2 h-2 rounded-full", l.dot)} />
-                  <span className="text-[11px] font-medium text-muted-foreground">{l.label}</span>
+                  <span className={cn("w-2.5 h-2.5 rounded-full shadow-2xs", l.dot)} />
+                  <span className="text-[11px] font-semibold text-foreground/90">{l.label}</span>
                 </div>
               ))}
             </div>
@@ -447,13 +447,13 @@ export default function RackMap() {
                 <div key={level} className="flex gap-3 items-stretch">
                   {/* Left Level Indicator Box */}
                   <div className={cn(
-                    "w-24 shrink-0 rounded-lg p-2.5 flex flex-col items-center justify-center border font-mono transition-colors",
+                    "w-24 shrink-0 rounded-lg p-2.5 flex flex-col items-center justify-center border font-mono transition-colors shadow-2xs",
                     isStilt
-                      ? "bg-purple-500/10 border-purple-500/20 text-purple-300"
-                      : "bg-blue-500/10 border-blue-500/20 text-blue-300"
+                      ? "bg-purple-100/90 dark:bg-purple-950/50 border-purple-400 dark:border-purple-600/70 text-purple-950 dark:text-purple-200"
+                      : "bg-blue-100/90 dark:bg-blue-950/50 border-blue-400 dark:border-blue-600/70 text-blue-950 dark:text-blue-200"
                   )}>
-                    <p className="font-bold text-sm tracking-tight">{level}</p>
-                    <p className="text-[9px] font-sans font-semibold uppercase tracking-wider opacity-80 mt-0.5">
+                    <p className="font-extrabold text-sm tracking-tight">{level}</p>
+                    <p className="text-[9px] font-sans font-bold uppercase tracking-wider opacity-90 mt-0.5">
                       {LEVEL_LABELS[level] || levelTag}
                     </p>
                   </div>
@@ -465,7 +465,7 @@ export default function RackMap() {
                     return (
                       <div
                         key={bay}
-                        className="w-[280px] shrink-0 rounded-lg border border-border/50 bg-secondary/15 p-2 flex flex-wrap gap-2 content-start min-h-[84px]"
+                        className="w-[280px] shrink-0 rounded-lg border border-border bg-card/60 dark:bg-card/40 p-2 flex flex-wrap gap-2 content-start min-h-[84px] shadow-2xs"
                       >
                         {slots.map(loc => (
                           <div
@@ -484,7 +484,7 @@ export default function RackMap() {
                         ))}
 
                         {slots.length === 0 && (
-                          <div className="w-full h-full min-h-[64px] flex items-center justify-center text-muted-foreground/30 text-[10px] font-mono border border-dashed border-border/30 rounded">
+                          <div className="w-full h-full min-h-[64px] flex items-center justify-center text-muted-foreground font-semibold text-[11px] font-mono border border-dashed border-border rounded">
                             Empty Level
                           </div>
                         )}
@@ -832,21 +832,21 @@ export default function RackMap() {
                         {cellInv.currentStock} {cellInv.unit}
                       </p>
                     </div>
-                    <div className="p-2.5 rounded-lg bg-card/60 border border-border/40">
-                      <p className="text-muted-foreground text-[10px]">Reorder Threshold</p>
-                      <p className="text-sm font-bold font-mono text-amber-400 mt-0.5">
+                    <div className="p-2.5 rounded-lg bg-card border border-border">
+                      <p className="text-muted-foreground text-[10px] font-medium">Reorder Threshold</p>
+                      <p className="text-sm font-bold font-mono text-amber-800 dark:text-amber-300 mt-0.5">
                         {cellInv.reorderLevel} {cellInv.unit}
                       </p>
                     </div>
-                    <div className="p-2.5 rounded-lg bg-card/60 border border-border/40">
-                      <p className="text-muted-foreground text-[10px]">Total Stock IN</p>
-                      <p className="text-xs font-bold font-mono text-emerald-400 mt-0.5 flex items-center gap-1">
+                    <div className="p-2.5 rounded-lg bg-card border border-border">
+                      <p className="text-muted-foreground text-[10px] font-medium">Total Stock IN</p>
+                      <p className="text-xs font-bold font-mono text-emerald-800 dark:text-emerald-300 mt-0.5 flex items-center gap-1">
                         <ArrowUpRight size={12} /> {cellInv.stockIn} {cellInv.unit}
                       </p>
                     </div>
-                    <div className="p-2.5 rounded-lg bg-card/60 border border-border/40">
-                      <p className="text-muted-foreground text-[10px]">Total Stock OUT</p>
-                      <p className="text-xs font-bold font-mono text-red-400 mt-0.5 flex items-center gap-1">
+                    <div className="p-2.5 rounded-lg bg-card border border-border">
+                      <p className="text-muted-foreground text-[10px] font-medium">Total Stock OUT</p>
+                      <p className="text-xs font-bold font-mono text-red-800 dark:text-red-300 mt-0.5 flex items-center gap-1">
                         <ArrowDownRight size={12} /> {cellInv.stockOut} {cellInv.unit}
                       </p>
                     </div>
@@ -862,15 +862,15 @@ export default function RackMap() {
                   </h4>
                   <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
                     {cellMovements.slice(0, 5).map(m => (
-                      <div key={m.id || m.date + m.quantity} className="flex items-center justify-between p-2 rounded-lg bg-secondary/30 border border-border/40 text-xs">
+                      <div key={m.id || m.date + m.quantity} className="flex items-center justify-between p-2 rounded-lg bg-secondary/40 border border-border text-xs">
                         <div className="flex items-center gap-2">
                           <span className={cn(
-                            "px-1.5 py-0.5 rounded text-[9px] font-bold",
-                            m.type === "IN" ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                            "px-1.5 py-0.5 rounded text-[9px] font-bold border",
+                            m.type === "IN" ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/40" : "bg-red-500/20 text-red-800 dark:text-red-300 border-red-500/40"
                           )}>
                             {m.type}
                           </span>
-                          <span className="font-mono text-muted-foreground text-[11px]">{m.date}</span>
+                          <span className="font-mono text-muted-foreground text-[11px] font-medium">{m.date}</span>
                         </div>
                         <span className="font-mono font-bold text-foreground">
                           {m.type === "IN" ? "+" : "-"}{m.quantity} {m.unit}

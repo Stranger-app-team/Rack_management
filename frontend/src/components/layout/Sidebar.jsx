@@ -64,9 +64,9 @@ export function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
 
       {/* Alert pill */}
       {reorderAlerts > 0 && (
-        <div className={cn("mx-3 mt-3 flex items-center gap-2 rounded-lg bg-amber-500/10 border border-amber-500/25 px-3 py-2", collapsed && "md:hidden")}>
-          <AlertTriangle size={13} className="text-amber-600 dark:text-amber-400 shrink-0" />
-          <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">{reorderAlerts} reorder alerts</span>
+        <div className={cn("mx-3 mt-3 flex items-center gap-2 rounded-lg bg-amber-500/15 border border-amber-600/40 dark:border-amber-500/30 px-3 py-2", collapsed && "md:hidden")}>
+          <AlertTriangle size={14} className="text-amber-700 dark:text-amber-300 shrink-0" />
+          <span className="text-xs text-amber-900 dark:text-amber-200 font-bold">{reorderAlerts} reorder alerts</span>
         </div>
       )}
 
@@ -76,7 +76,7 @@ export function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
           const items = navItems.filter(n => n.group === gKey)
           return (
             <div key={gKey} className="mb-3">
-              <p className={cn("text-[10px] font-semibold uppercase tracking-wider text-muted-foreground px-2 mb-1", collapsed && "md:hidden")}>{gLabel}</p>
+              <p className={cn("text-[11px] font-bold uppercase tracking-wider text-muted-foreground px-2.5 mb-1.5", collapsed && "md:hidden")}>{gLabel}</p>
               {items.map(item => {
                 const Icon = item.icon
                 const isActive = location.pathname === item.path
@@ -85,8 +85,8 @@ export function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) 
                     key={item.path}
                     to={item.path}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-medium transition-all duration-150 mb-0.5 border border-transparent",
-                      isActive ? "nav-item-active" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                      "flex items-center gap-3 rounded-lg px-2.5 py-2 text-sm font-semibold transition-all duration-150 mb-0.5 border border-transparent",
+                      isActive ? "nav-item-active" : "text-muted-foreground hover:text-foreground hover:bg-secondary",
                       collapsed && "md:justify-center md:px-2"
                     )}
                     onClick={() => { if (window.innerWidth < 768) setMobileOpen(false) }}

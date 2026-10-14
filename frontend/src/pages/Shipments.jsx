@@ -326,7 +326,7 @@ export default function Shipments() {
                   </td>
                   <td className="font-mono">{m.locationId}</td>
                   <td className="text-center">
-                    <span className={m.type === 'IN' ? 'text-emerald-500 font-bold' : 'text-red-500 font-bold'}>
+                    <span className={m.type === 'IN' ? 'text-emerald-800 dark:text-emerald-300 font-extrabold px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30' : 'text-red-800 dark:text-red-300 font-extrabold px-1.5 py-0.5 rounded bg-red-500/15 border border-red-500/30'}>
                       {m.type}
                     </span>
                   </td>

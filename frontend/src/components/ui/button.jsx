@@ -1,14 +1,14 @@
-﻿import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
 const variants = {
-  default:     "bg-primary text-primary-foreground hover:bg-primary/85 shadow-lg shadow-primary/20",
-  destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/85",
-  outline:     "border border-border text-foreground bg-transparent hover:bg-secondary/50",
-  secondary:   "bg-secondary text-secondary-foreground hover:bg-secondary/70",
-  ghost:       "text-foreground hover:bg-secondary/50",
-  link:        "text-primary underline-offset-4 hover:underline",
-  success:     "bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-500/20",
-  warning:     "bg-amber-500 text-white hover:bg-amber-400 shadow-lg shadow-amber-500/20",
+  default:     "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/25 font-semibold",
+  destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold shadow-xs",
+  outline:     "border border-border text-foreground bg-card hover:bg-secondary/70 shadow-2xs font-semibold",
+  secondary:   "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-medium",
+  ghost:       "text-foreground hover:bg-secondary/60 font-medium",
+  link:        "text-primary underline-offset-4 hover:underline font-medium",
+  success:     "bg-emerald-600 text-white hover:bg-emerald-500 shadow-md shadow-emerald-500/20 font-semibold",
+  warning:     "bg-amber-600 dark:bg-amber-500 text-white hover:bg-amber-500 shadow-md shadow-amber-500/20 font-semibold",
 }
 const sizes = {
   default: "h-9 px-4 py-2 text-sm",

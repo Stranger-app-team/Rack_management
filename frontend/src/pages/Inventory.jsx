@@ -85,17 +85,17 @@ export default function Inventory() {
       {/* Status summary */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { label: "OK",      count: stats.ok,      activeBg: "bg-emerald-500/15 border-emerald-500/40", numColor: "text-emerald-600 dark:text-emerald-400" },
-          { label: "REORDER", count: stats.reorder,  activeBg: "bg-amber-500/15 border-amber-500/40",   numColor: "text-amber-600 dark:text-amber-400"   },
-          { label: "EMPTY",   count: stats.empty,    activeBg: "bg-red-500/15 border-red-500/40",       numColor: "text-red-600 dark:text-red-400"       },
+          { label: "OK",      count: stats.ok,      activeBg: "bg-emerald-500/20 border-emerald-600/60 dark:border-emerald-500/50 shadow-xs", numColor: "text-emerald-800 dark:text-emerald-300" },
+          { label: "REORDER", count: stats.reorder,  activeBg: "bg-amber-500/20 border-amber-600/60 dark:border-amber-500/50 shadow-xs",   numColor: "text-amber-800 dark:text-amber-300"   },
+          { label: "EMPTY",   count: stats.empty,    activeBg: "bg-red-500/20 border-red-600/60 dark:border-red-500/50 shadow-xs",       numColor: "text-red-800 dark:text-red-300"       },
         ].map(s => (
           <button
             key={s.label}
             onClick={() => setStatusFilter(statusFilter === s.label ? "all" : s.label)}
-            className={`rounded-xl border p-3 text-left transition-all ${statusFilter === s.label ? s.activeBg : "glass border-border hover:border-primary/30"}`}
+            className={`rounded-xl border p-3 text-left transition-all ${statusFilter === s.label ? s.activeBg : "glass border-border hover:border-primary/50"}`}
           >
-            <p className={`text-2xl font-bold ${s.numColor}`}>{s.count}</p>
-            <p className="text-xs text-muted-foreground">{s.label}</p>
+            <p className={`text-2xl font-extrabold ${s.numColor}`}>{s.count}</p>
+            <p className="text-xs font-bold text-foreground/80">{s.label}</p>
           </button>
         ))}
       </div>
@@ -180,17 +180,17 @@ export default function Inventory() {
                       </span>
                     </td>
                     <td className="text-right">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-medium border border-emerald-500/20">
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30">
                         {item.stockIn}
                       </span>
                     </td>
                     <td className="text-right">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 font-mono text-xs font-medium border border-red-500/20">
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/15 text-red-800 dark:text-red-300 font-mono text-xs font-bold border border-red-500/30">
                         {item.stockOut}
                       </span>
                     </td>
                     <td className="text-right">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-secondary/40 text-muted-foreground font-mono text-xs font-medium border border-border">
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-secondary/70 text-foreground font-mono text-xs font-semibold border border-border">
                         {item.reorderLevel} <span className="text-[10px] uppercase ml-1 opacity-70">{item.unit}</span>
                       </span>
                     </td>
@@ -198,13 +198,13 @@ export default function Inventory() {
                   </tr>
                 ))}
                 {filtered.length === 0 && (
-                  <tr><td colSpan={8} className="text-center py-12 text-muted-foreground text-sm">No items match your filters</td></tr>
+                  <tr><td colSpan={8} className="text-center py-12 text-muted-foreground font-medium text-sm">No items match your filters</td></tr>
                 )}
               </tbody>
               {filtered.length > 0 && (
                 <tfoot>
-                  <tr className="border-t-2 border-border bg-secondary/20">
-                    <td colSpan={3} className="py-3 px-4 text-xs font-semibold text-muted-foreground">TOTALS ({filtered.length} items)</td>
+                  <tr className="border-t-2 border-border bg-muted/40 font-bold">
+                    <td colSpan={3} className="py-3 px-4 text-xs font-bold text-foreground">TOTALS ({filtered.length} items)</td>
                     <td className="text-right py-3 px-4">
                       <span className="inline-block px-2.5 py-1 rounded-md bg-primary/15 text-primary font-bold border border-primary/30 shadow-sm">
                         <span className="font-mono text-sm">
@@ -213,12 +213,12 @@ export default function Inventory() {
                       </span>
                     </td>
                     <td className="text-right py-3 px-4">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-sm font-bold border border-emerald-500/20">
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-mono text-sm font-bold border border-emerald-500/30">
                         {filtered.reduce((s, i) => s + (i.stockIn ?? 0), 0).toFixed(0)}
                       </span>
                     </td>
                     <td className="text-right py-3 px-4">
-                      <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 font-mono text-sm font-bold border border-red-500/20">
+                      <span className="inline-block px-1.5 py-0.5 rounded bg-red-500/15 text-red-800 dark:text-red-300 font-mono text-sm font-bold border border-red-500/30">
                         {filtered.reduce((s, i) => s + (i.stockOut ?? 0), 0).toFixed(0)}
                       </span>
                     </td>

@@ -545,9 +545,9 @@ export default function StockMovement() {
                     key={t} type="button"
                     onClick={() => handleTypeChange(t)}
                     className={`flex-1 py-2.5 text-sm font-bold transition-all ${form.type === t
-                      ? t === "IN" ? "bg-emerald-500/20 text-emerald-400 border-r border-emerald-500/30"
-                                    : "bg-red-500/20 text-red-400"
-                      : "text-muted-foreground hover:bg-secondary/50"}`}
+                      ? t === "IN" ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-r border-emerald-500/40 font-extrabold"
+                                    : "bg-red-500/20 text-red-800 dark:text-red-300 font-extrabold"
+                      : "text-muted-foreground hover:bg-secondary/70 font-semibold"}`}
                   >
                     {t === "IN" ? "⬆ IN (Receive Stock)" : "⬇ OUT (Issue Stock)"}
                   </button>

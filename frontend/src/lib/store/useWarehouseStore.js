@@ -351,7 +351,7 @@ const useWarehouseStore = create((set, get) => ({
 
   // ─── UI ACTIONS ────────────────────────────────────────────────────────
 
-  theme: (typeof window !== 'undefined' && localStorage.getItem('warehouse-theme')) || 'dark',
+  theme: (typeof window !== 'undefined' && localStorage.getItem('warehouse-theme')) || 'light',
   toggleTheme: () => {
     const next = get().theme === 'light' ? 'dark' : 'light'
     if (typeof document !== 'undefined') {

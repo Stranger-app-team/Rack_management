@@ -211,12 +211,12 @@ export default function LocationMaster() {
             <table className="w-full wms-table min-w-[800px]">
               <thead>
                 <tr>
-                  <th className="text-left">Location ID<br/><span className="text-[9px] font-normal text-muted-foreground/60">Formula: Rack-B{"{"}Bay:00{"}"}-Level-Slot</span></th>
+                  <th className="text-left">Location ID<br/><span className="text-[9px] font-medium text-muted-foreground">Formula: Rack-B{"{"}Bay:00{"}"}-Level-Slot</span></th>
                   <th className="text-center">Rack</th><th className="text-center">Bay</th>
                   <th className="text-center">Level</th><th className="text-center">Slot</th>
-                  <th className="text-center">Status<br/><span className="text-[9px] font-normal text-muted-foreground/60">IF(Qty{">"}0,"Occupied","Available")</span></th>
+                  <th className="text-center">Status<br/><span className="text-[9px] font-medium text-muted-foreground">IF(Qty{">"}0,"Occupied","Available")</span></th>
                   <th className="text-left">Material</th>
-                  <th className="text-right">Qty<br/><span className="text-[9px] font-normal text-muted-foreground/60">SUMIFS IN - SUMIFS OUT</span></th>
+                  <th className="text-right">Qty<br/><span className="text-[9px] font-medium text-muted-foreground">SUMIFS IN - SUMIFS OUT</span></th>
                   <th></th>
                 </tr>
               </thead>
@@ -229,12 +229,12 @@ export default function LocationMaster() {
                     <td className="text-center font-mono text-xs">{l.level}</td>
                     <td className="text-center font-mono text-xs">{l.slot}</td>
                     <td className="text-center">
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-md ${
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-md border ${
                         l.status === "Occupied"
-                          ? "bg-blue-500/15 text-blue-400"
+                          ? "bg-blue-500/15 text-blue-800 dark:text-blue-300 border-blue-500/40"
                           : l.status === "Allocated"
-                          ? "bg-purple-500/15 text-purple-400"
-                          : "bg-emerald-500/15 text-emerald-400"
+                          ? "bg-purple-500/15 text-purple-800 dark:text-purple-300 border-purple-500/40"
+                          : "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/40"
                       }`}>
                         {l.status}
                       </span>
@@ -567,7 +567,7 @@ export default function LocationMaster() {
                   Will assign <span className="font-semibold text-foreground">{gaMat}</span>
                   {gaSelectedMat ? ` (${gaSelectedMat.name || gaSelectedMat.description})` : ""} to:
                 </p>
-                <p className="font-mono font-bold text-emerald-400 text-lg mt-0.5">{gaSlot}</p>
+                <p className="font-mono font-bold text-emerald-800 dark:text-emerald-400 text-lg mt-0.5">{gaSlot}</p>
               </div>
             )}
           </div>
