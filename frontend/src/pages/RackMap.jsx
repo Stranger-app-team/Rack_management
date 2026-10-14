@@ -416,7 +416,7 @@ export default function RackMap() {
           </span>
         </div>
 
-        <div className="overflow-x-auto p-4 w-full touch-pan-x">
+        <div className="overflow-x-auto p-4 w-full">
           <div className="min-w-max space-y-3">
             {/* Header Row: BAY \ LEVEL Column Headers */}
             <div className="flex gap-3 pb-2 border-b border-border/60">
